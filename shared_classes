@@ -1,8 +1,12 @@
 ##### Shared Classes ####
-
-
+BattleState
+EmptyTile
+EnemyTile
+ExplorationState
+GameContext
 
 
 #### Shared Interface ####
-
+Tile
+GameState
 
