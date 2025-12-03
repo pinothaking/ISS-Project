@@ -69,8 +69,11 @@ public class UnixServer {
                         // Invia il nuovo turno
                         System.out.println("→ Cambio turno, ora è il turno di: " + currentPlayer);
                         out.println("SET_TURN:" + currentPlayer);
+                        out.flush();
                         out.println("MOVE_PIECE");
-                        out.println("WAIT_PLAYER"); // ← QUI: Aspetta che il nuovo giocatore faccia la mossa
+                        out.flush();
+                        out.println("WAIT_PLAYER"); 
+                        out.flush();
                         System.out.println("→ Inviato WAIT_PLAYER per giocatore " + currentPlayer);
 
                     } else if (line.equals("OK")) {
@@ -80,7 +83,7 @@ public class UnixServer {
             }
         }
     }
-}```
+}
 /*
  * 
  * 

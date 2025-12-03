@@ -3,7 +3,7 @@ import pygame
 import math
 
 class Pawn:
-    def __init__(self, image_path, x, y, speed=5):
+    def __init__(self, image_path, x, y, id , speed=5):
         self.image = pygame.image.load(image_path).convert_alpha()
         self.x = float(x)
         self.y = float(y)
@@ -11,6 +11,7 @@ class Pawn:
         self.target_y = float(y)
         self.speed = speed
         self.arrived_threshold = 1.0
+        self.id = id
 
     def move_to(self, tx, ty):
         """Imposta una nuova posizione verso cui muoversi"""

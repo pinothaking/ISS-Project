@@ -14,7 +14,7 @@ label = None
 label_start = None
 label_turn = None
 Map = None
-pawn = Pawn("img/Pawn.png", 367, 700, speed=0.5)
+pawn = Pawn("img/Pawn.png", 367, 700, 1 ,speed=0.5)
 num_players = 0
 current_player = 1
 player_selection_done = False
@@ -136,7 +136,7 @@ while running:
     pawn.draw(screen)
     
     if label:
-        screen.blit(label, (250, 400))
+        screen.blit(label, (0, 400))
     
     if label_start:
         screen.blit(label_start, (160, 360))
