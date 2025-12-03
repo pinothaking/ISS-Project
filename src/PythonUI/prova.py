@@ -8,13 +8,17 @@ screen = pygame.display.set_mode((620, 760))
 pygame.display.set_caption('The Three Kingdoms')
 clock = pygame.time.Clock()
 myfont = pygame.font.SysFont("lucidasanstypewriter", 35)
+myfont_big = pygame.font.SysFont("lucidasanstypewriter", 45)
 
 label = None
 label_start = None
+label_turn = None
 Map = None
 pawn = Pawn("img/Pawn.png", 367, 700, speed=0.5)
 num_players = 0
+current_player = 1
 player_selection_done = False
+can_move = False
 
 SOCKET_PATH = "/tmp/game_socket"
 s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
@@ -33,7 +37,6 @@ while running:
                 num_players = 2
                 player_selection_done = True
                 label_start = None
-                # Invia a Java
                 try:
                     s.sendall(f"PLAYERS:{num_players}\n".encode())
                     print(f"Inviato numero giocatori: {num_players}")
@@ -57,6 +60,23 @@ while running:
                     print(f"Inviato numero giocatori: {num_players}")
                 except OSError as e:
                     print("Errore invio:", e)
+        
+        # Gestione della mossa (esempio: premendo SPAZIO)
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                print(f"SPAZIO premuto! can_move={can_move}, current_player={current_player}")
+                if can_move:
+                    print(f"✓ Giocatore {current_player} fa la mossa!")
+                    can_move = False
+                    # Notifica Java che la mossa è completata
+                    try:
+                        s.sendall(b"MOVE_DONE\n")
+                        print("→ Inviato MOVE_DONE a Java")
+                        label_turn = myfont_big.render("Attendere...", 1, (255, 100, 100))
+                    except OSError as e:
+                        print("Errore invio:", e)
+                else:
+                    print("✗ Non puoi muovere ora (can_move=False)")
     
     try:
         data = s.recv(1024)
@@ -68,7 +88,6 @@ while running:
                 
                 if cmd == "REQUEST_PLAYERS":
                     print("Java chiede il numero di giocatori")
-                    # Mostra prompt all'utente
                     label_start = myfont.render("Premi 2, 3 o 4 per scegliere", 1, (0, 0, 0))
                 
                 elif cmd == "DRAW_BOARD":
@@ -78,10 +97,17 @@ while running:
                 elif cmd.startswith("SET_PLAYERS:"):
                     num_players = int(cmd.split(":")[1])
                     label = myfont.render(f"N Player: {num_players}", 1, (255, 255, 255))
+                    label_start = None
                     print(f"Numero giocatori impostato: {num_players}")
                 
+                elif cmd.startswith("SET_TURN:"):
+                    current_player = int(cmd.split(":")[1])
+                    label_turn = myfont_big.render(f"Turno di Player {current_player}", 1, (255, 215, 0))
+                    can_move = True
+                    print(f"✓✓✓ È il turno del giocatore {current_player} - can_move={can_move}")
+                
                 elif cmd == "MOVE_PIECE":
-                    print("Muovo pedina!")
+                    print("→ Eseguo MOVE_PIECE")
                     pawn.move_to(297, 700)
                     pawn.scale_image((40, 40))
                 
@@ -110,9 +136,21 @@ while running:
     pawn.draw(screen)
     
     if label:
-        screen.blit(label, (0, 300))
+        screen.blit(label, (250, 400))
+    
     if label_start:
-        screen.blit(label_start , (160 , 420))
+        screen.blit(label_start, (160, 360))
+    
+    # Mostra il turno in alto al centro
+    if label_turn:
+        turn_rect = label_turn.get_rect(center=(310, 50))
+        screen.blit(label_turn, turn_rect)
+    
+    # Mostra istruzioni se è il turno del giocatore
+    if can_move:
+        instruction = myfont.render("Premi SPAZIO per muovere", 1, (0, 255, 0))
+        instruction_rect = instruction.get_rect(center=(310, 100))
+        screen.blit(instruction, instruction_rect)
     
     pygame.display.flip()
     clock.tick(60)
