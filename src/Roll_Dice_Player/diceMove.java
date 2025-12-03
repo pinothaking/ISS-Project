@@ -1,5 +1,4 @@
-package diceMove;
-import Dice.Dice;
+package Roll_Dice_Player;
 import java.util.Random;
 
 

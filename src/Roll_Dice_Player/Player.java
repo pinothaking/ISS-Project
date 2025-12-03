@@ -1,4 +1,4 @@
-package Player;
+package Roll_Dice_Player;
 
 public class Player{
 

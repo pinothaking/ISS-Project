@@ -1,6 +1,4 @@
-package DiceEq;
-import Dice.Dice;
-
+package Roll_Dice_Player;
 import java.util.Random;
 
 public class DiceEq extends Dice {

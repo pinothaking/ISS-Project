@@ -1,11 +1,4 @@
-package RollDice;
-
-import Command.Command;
-import Player.Player;
-import DiceEq.DiceEq;
-import diceMove.diceMove;
-
-
+package Roll_Dice_Player;
 
 public class RollDice extends Command{
 	private Player player;

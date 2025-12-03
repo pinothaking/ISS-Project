@@ -1,6 +1,4 @@
-package Button;
-import Command.Command;
-
+package Roll_Dice_Player;
 
 public class Button {
  private Command command;
