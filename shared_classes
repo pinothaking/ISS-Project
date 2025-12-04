@@ -4,7 +4,13 @@ EmptyTile
 EnemyTile
 ExplorationState
 GameContext
-
+Button
+Command
+Dice
+DiceEq
+diceMove
+Player
+RollDice
 
 #### Shared Interface ####
 Tile

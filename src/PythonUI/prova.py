@@ -143,14 +143,12 @@ while running:
     
     # Mostra il turno in alto al centro
     if label_turn:
-        turn_rect = label_turn.get_rect(center=(310, 50))
-        screen.blit(label_turn, turn_rect)
+        screen.blit(label_turn, (0 , 420))
     
     # Mostra istruzioni se è il turno del giocatore
     if can_move:
-        instruction = myfont.render("Premi SPAZIO per muovere", 1, (0, 255, 0))
-        instruction_rect = instruction.get_rect(center=(310, 100))
-        screen.blit(instruction, instruction_rect)
+        instruction = myfont.render("Premi SPAZIO per dado", 1, (255, 255, 255))
+        screen.blit(instruction, (0 , 440))
     
     pygame.display.flip()
     clock.tick(60)
