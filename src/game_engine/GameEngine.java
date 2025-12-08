@@ -1,18 +1,20 @@
+package game_engine;
+
+
 import java.util.ArrayList;
 import java.util.List;
-
-import Roll_Dice_Player.Player;
-import battle_exploration_tiles.Tile;
 import game_map_state.GameMap;
+import game_map_state.GameMapTile;
 import game_map_state.Sectors;
+import Roll_Dice_Player.Player;
 
 public class GameEngine {
 
-     public void movePlayer(Player player, int steps, GameMap map) {
+    public void movePlayer(Player player, int steps, GameMap map) {
 
-        List<Tile> allTiles = new ArrayList<>();
+        List<GameMapTile> allTiles = new ArrayList<>();
         for (Sectors s : map.getSectors()) {
-            allTiles.addAll(s.getTiles());
+            allTiles.addAll(s.getTiles());  
         }
 
         int currentIndex = allTiles.indexOf(player.getPosition());
@@ -31,4 +33,6 @@ public class GameEngine {
                 System.out.println("Player nel settore: " + s.getName());
             }
         }
+    }
+
 }

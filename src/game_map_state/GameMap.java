@@ -9,7 +9,7 @@ public class GameMap {
         this.sectors = sectors;
     }
 
-    public List<Sectors> getSectors(List<Sectors> sectors){
+    public List<Sectors> getSectors(){
         return sectors;
     }
 

@@ -3,23 +3,24 @@ import java.util.List;
 import Roll_Dice_Player.Player;
 
 public class Sectors {
-    private String name;
-    private List<GameMapTile> tiles;
 
-    public Sectors(String name , List<GameMapTile> tiles){
+    private List<GameMapTile> tiles;
+    private String name;
+
+    public Sectors(String name, List<GameMapTile> tiles) {
         this.name = name;
         this.tiles = tiles;
     }
 
-    public String getName(){
-        return name;
-    }
-    
-    public List<GameMapTile> getTiles(){
+    public List<GameMapTile> getTiles() {
         return tiles;
     }
 
-    public boolean containsPlayer(Player player){
+    public boolean containsPlayer(Player player) {
         return tiles.contains(player.getPosition());
+    }
+
+    public String getName() {
+        return name;
     }
 }
