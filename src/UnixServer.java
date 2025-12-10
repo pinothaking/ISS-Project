@@ -3,6 +3,7 @@ import java.net.*;
 import java.nio.channels.*;
 import java.nio.file.*;
 
+
 public class UnixServer {
     public static void main(String[] args) throws Exception {
         Path socketPath = Path.of("/tmp/game_socket");
@@ -70,7 +71,7 @@ public class UnixServer {
                         System.out.println("→ Cambio turno, ora è il turno di: " + currentPlayer);
                         out.println("SET_TURN:" + currentPlayer);
                         out.flush();
-                        out.println("MOVE_PIECE");
+                        out.println("THROWDICE");
                         out.flush();
                         out.println("WAIT_PLAYER"); 
                         out.flush();

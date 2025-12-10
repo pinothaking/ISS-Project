@@ -11,7 +11,7 @@ import Roll_Dice_Player.Player;
 public class GameEngine {
 
     public void movePlayer(Player player, int steps, GameMap map) {
-
+        
         List<GameMapTile> allTiles = new ArrayList<>();
         for (Sectors s : map.getSectors()) {
             allTiles.addAll(s.getTiles());  

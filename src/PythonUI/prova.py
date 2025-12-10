@@ -20,6 +20,10 @@ current_player = 1
 player_selection_done = False
 can_move = False
 
+## dice sprite ###
+
+####
+
 SOCKET_PATH = "/tmp/game_socket"
 s = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM)
 s.connect(SOCKET_PATH)
@@ -106,10 +110,11 @@ while running:
                     can_move = True
                     print(f"✓✓✓ È il turno del giocatore {current_player} - can_move={can_move}")
                 
-                elif cmd == "MOVE_PIECE":
-                    print("→ Eseguo MOVE_PIECE")
-                    pawn.move_to(297, 700)
-                    pawn.scale_image((40, 40))
+                elif cmd == "THROWDICE":
+                    print("→ Eseguo THROWDICE")
+
+                    #pawn.move_to(297, 700)
+                    #pawn.scale_image((40, 40))
                 
                 elif cmd == "WAIT_PLAYER":
                     print("Attendi il giocatore...")
