@@ -1,4 +1,4 @@
-package Power_Up_Souls;
+package stats_change;
 
 public class ConcreteCommand implements command{
 	// riceve l'oggetto Receiver che eseguirà le operazioni concrete

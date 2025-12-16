@@ -1,4 +1,4 @@
-package Power_Up_Souls;
+package stats_change;
 
 public interface observer {
 	void update();// classe interfaccia per aggiornare i valori del giocatore/equipaggiamento

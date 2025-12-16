@@ -1,4 +1,4 @@
-package Power_Up_Souls;
+package stats_change;
 
 public class soulUI implements observer{
 	@Override

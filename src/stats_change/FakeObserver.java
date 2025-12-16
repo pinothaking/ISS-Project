@@ -1,4 +1,4 @@
-package Power_Up_Souls;
+package stats_change;
 
 public class FakeObserver implements observer{
 	public boolean update = false;
