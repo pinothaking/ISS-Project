@@ -3,7 +3,6 @@ package stats_change;
 import java.util.ArrayList;
 import java.util.List;
 
-// per fare i test
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
@@ -11,7 +10,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 
 
-public class ConsumeSoul implements command {
+public class ConsumeSoul implements Command {
 	List<observer> observer = new ArrayList<>();
 	private Receiver AuraPoint;
 	
@@ -64,7 +63,6 @@ public class ConsumeSoul implements command {
 			assertEquals(0, consumeSoul.observer.size());
 		}
 	}
-	//fine test
 }
 
 

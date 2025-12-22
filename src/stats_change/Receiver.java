@@ -1,21 +1,28 @@
 package stats_change;
 
+import Roll_Dice_Player.Player;
+
 public class Receiver {
-	public int AuraPoint;
-	private int statistica;
-	
-	public void addAuraPoint(int increment) {
-		AuraPoint += increment;
-	}
-	public void addStatistica (int increment) {
-		statistica += increment;
-	}
-	
-	public int getAuraPoint() {
-		return AuraPoint;
-	}
-	
-	public int getStatistica() {
-		return statistica;
-	}
+
+    private Player player;
+    private int statistica;
+
+    public Receiver(Player player) {
+        this.player = player;
+    }
+
+    // modifica spirit e aura del player
+    public void saveSoul(int spiritGain, int auraGain) {
+        player.setSpirit(player.getSpirit() + spiritGain);
+        player.setAura(player.getAura() + auraGain);
+    }
+
+    // modifica statistica interna del receiver
+    public void addStatistica(int increment) {
+        statistica += increment;
+    }
+
+    public int getStatistica() {
+        return statistica;
+    }
 }
