@@ -4,7 +4,7 @@ import game_engine.GameEngine;
 import game_map_state.GameMap;
 
 
-public class RollDice extends Command {
+public class RollDice extends AbstractCommand {
 	private final Player player;
 	private final DiceEq diceEq;
 	private final diceMove diceMove;

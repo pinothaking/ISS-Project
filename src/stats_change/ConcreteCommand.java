@@ -1,6 +1,6 @@
 package stats_change;
 
-public class ConcreteCommand implements command{
+public class ConcreteCommand implements Command{
 	// riceve l'oggetto Receiver che eseguirà le operazioni concrete
 	
 	
@@ -18,7 +18,7 @@ public class ConcreteCommand implements command{
 	//esegue il comando: applica gli incrementi al receiver
 	@Override
 	public void execute() {
-		receiver.addAuraPoint(apIncrement); // -> aggiunge punti aura
+		receiver.saveSoul(0,apIncrement); // -> aggiunge punti aura
 		receiver.addStatistica(staIncrement); // -> aggiunge statistiche
 	}
 }

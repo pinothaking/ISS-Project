@@ -1,9 +1,9 @@
 package Roll_Dice_Player;
 
 public class Button {
- private Command command;
+ private AbstractCommand command;
  
- public Button(Command command) {
+ public Button(AbstractCommand command) {
 	 this.command = command;
  }
  
