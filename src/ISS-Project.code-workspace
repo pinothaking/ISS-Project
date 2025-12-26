@@ -4,5 +4,11 @@
 			"path": ".."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"java.project.referencedLibraries": [
+			"lib/**/*.jar",
+			"src/lib/junit-jupiter-api-5.10.0.jar",
+			"src/lib/junit-jupiter-engine-5.10.0.jar"
+		]
+	}
 }

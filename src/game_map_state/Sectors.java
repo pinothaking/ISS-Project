@@ -1,4 +1,5 @@
 package game_map_state;
+
 import java.util.List;
 import Roll_Dice_Player.Player;
 
@@ -16,11 +17,14 @@ public class Sectors {
         return tiles;
     }
 
-    public boolean containsPlayer(Player player) {
-        return tiles.contains(player.getPosition());
-    }
-
     public String getName() {
         return name;
     }
+
+    
+    public boolean containsPlayer(Player player) {
+        int playerTileId = player.getPosition().getId();
+        return tiles.stream().anyMatch(t -> t.getId() == playerTileId);
+    }
+
 }
