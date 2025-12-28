@@ -3,8 +3,8 @@ import static org.junit.jupiter.api.Assertions.*;
 import battle_exploration_tiles.GameContext;
 import battle_exploration_tiles.Tile;
 import game_map_state.GameMapTile;
-import Roll_Dice_Player.Player;
-import Roll_Dice_Player.PlayerDisplay;
+import Character.Player.Player;
+import Character.Player.PlayerDisplay;
 import stats_change.Receiver;
 import org.junit.jupiter.api.Test;
 

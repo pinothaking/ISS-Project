@@ -1,7 +1,8 @@
 package game_map_state;
 
 import java.util.List;
-import Roll_Dice_Player.Player;
+
+import Character.Player.Player;
 
 public class Sectors {
 

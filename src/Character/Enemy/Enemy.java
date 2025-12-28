@@ -1,6 +1,8 @@
-package Roll_Dice_Player;
+package Character.Enemy;
 
 import java.util.Random;
+
+import Character.Player.Player;
 
 public class Enemy {
     private int HP;

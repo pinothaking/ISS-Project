@@ -1,4 +1,4 @@
-package Roll_Dice_Player;
+package Character.Enemy;
 
 public abstract class Command {
 	public abstract void execute();

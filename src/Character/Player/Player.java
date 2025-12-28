@@ -1,4 +1,4 @@
-package Roll_Dice_Player;
+package Character.Player;
 
 import game_map_state.GameMapTile;
 

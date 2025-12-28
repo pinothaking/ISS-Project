@@ -4,9 +4,10 @@ import battle_exploration_tiles.GameContext;
 import battle_exploration_tiles.Tile;
 import game_map_state.GameMapTile;
 import org.junit.jupiter.api.Test;
+
+import Character.Player.Player;
 import stats_change.SaveSoulCommand;
 import stats_change.Receiver;
-import Roll_Dice_Player.Player;
 
 class SaveSoulCommandTest {
 

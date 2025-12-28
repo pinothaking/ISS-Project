@@ -1,4 +1,4 @@
-package Roll_Dice_Player;
+package Character.Player.dice;
 import java.util.Random;
 
 public class DiceEq extends Dice {

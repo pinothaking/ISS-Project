@@ -1,4 +1,5 @@
-package Roll_Dice_Player;
+package Character.Enemy;
+import Character.Player.Player;
 import battle_exploration_tiles.*;
 
 public class FightGuardianCmd extends Command{

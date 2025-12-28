@@ -1,10 +1,12 @@
-package Roll_Dice_Player;
+package Character.Player.dice;
 
+import Character.Enemy.Command;
+import Character.Player.Player;
 import game_engine.GameEngine;
 import game_map_state.GameMap;
 
 
-public class RollDice extends AbstractCommand {
+public class RollDice extends Command {
 	private final Player player;
 	private final DiceEq diceEq;
 	private final diceMove diceMove;

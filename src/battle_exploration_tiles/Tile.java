@@ -1,6 +1,6 @@
 package battle_exploration_tiles;
 
-import Roll_Dice_Player.Player;
+import Character.Player.Player;
 
 // Interfaccia casella
 

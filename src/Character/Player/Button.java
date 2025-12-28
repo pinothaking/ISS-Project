@@ -1,9 +1,11 @@
-package Roll_Dice_Player;
+package Character.Player;
+
+import Character.Enemy.Command;
 
 public class Button {
- private AbstractCommand command;
+ private Command command;
  
- public Button(AbstractCommand command) {
+ public Button(Command command) {
 	 this.command = command;
  }
  

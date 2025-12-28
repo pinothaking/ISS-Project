@@ -1,4 +1,4 @@
-package Roll_Dice_Player;
+package Character.Player;
 
 public class StatsDisplay implements PlayerDisplay {
 

@@ -1,4 +1,5 @@
-package Roll_Dice_Player;
+package Character.Enemy;
+import Character.Player.Player;
 import battle_exploration_tiles.*;
 
 // Sottoclasse di Command per pagare e passare nella cella guardiano

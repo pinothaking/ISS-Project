@@ -1,5 +1,9 @@
 package battle_exploration_tiles;
-import Roll_Dice_Player.*;
+import Character.*;
+import Character.Enemy.Enemy;
+import Character.Enemy.FightGuardianCmd;
+import Character.Enemy.PayAndPassCmd;
+import Character.Player.Player;
 
 public class GuardianTile implements Tile{
     private Enemy guardian;
