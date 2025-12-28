@@ -19,10 +19,10 @@ public class InventoryEntry {
         return item;
     }
 
-    void addOne(int quantity) {
+    void addOne() {
         this.quantity++;
     }
-    void removeone(int quantity) {
+    void removeone() {
         this.quantity--;
     }
 }

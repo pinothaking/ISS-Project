@@ -20,4 +20,13 @@ public class Armor extends Item {
     public int getArmorId() {
         return armorId;
     }
+
+    private void levelUp () {
+
+    }
+
+    @Override
+    public void onDuplicate(){
+        levelUp();
+    }
 }

@@ -30,13 +30,15 @@ public class Item {
         return this.ObjectId;
     }
 
-    public boolean isStackabl() {
+    public boolean isStackable() {
         return isStackable;
     }
 
     public String getFusionKey() {
     return fusionKey;
 }
+
+    public void onDuplicate() {}
 
     /*public void setName(String name) {
         
