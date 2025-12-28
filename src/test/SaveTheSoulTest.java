@@ -6,7 +6,7 @@ import game_map_state.GameMapTile;
 import org.junit.jupiter.api.Test;
 
 import Character.Player.Player;
-import stats_change.SaveSoulCommand;
+import stats_change.SaveSoul;
 import stats_change.Receiver;
 
 class SaveSoulCommandTest {
@@ -28,7 +28,7 @@ class SaveSoulCommandTest {
         Player player = new Player(1111, "Hero", tile, 100, 10, 5);
         Receiver receiver = new Receiver(player);
 
-        SaveSoulCommand command = new SaveSoulCommand(receiver, 3, 2);
+        SaveSoul command = new SaveSoul(receiver, 3, 2);
 
         // Act
         command.execute();
