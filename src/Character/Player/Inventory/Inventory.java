@@ -15,10 +15,6 @@ public class Inventory {
          if (entry == null) {
         entriesByKey.put(key, new InventoryEntry(item));
         }
-
-    // 4) se esiste già:
-    //    - stackable => aumento quantità
-    //    - non stackable => fusione/upgrade (armi/armature)
         if (item.isStackable()) {
                 entry.addOne();
         } else {
