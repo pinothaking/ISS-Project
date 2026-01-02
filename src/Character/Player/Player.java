@@ -35,7 +35,7 @@ public class Player {
         return hp;
     }
 
-    public int getAura() {
+    public  int getAura() {
         return aura;
     }
 
@@ -55,21 +55,17 @@ public class Player {
         this.spirit = spirit;
     }
 
-    public void moveTo(GameMapTile newTile) {
-        this.id_tile.setPlayer(false);
-        this.id_tile = newTile;
-        this.id_tile.setPlayer(true);
-    }
-
-    public Player(){
-        this.aura = 0;
-    }
-
     public void spendAuraPoint(int amount){
         this.aura -= amount;
     }
 
         public void addAuraPoints(int amount) {
         this.aura += amount;
+    }
+
+    public void moveTo(GameMapTile newTile) {
+        this.id_tile.setPlayer(false);
+        this.id_tile = newTile;
+        this.id_tile.setPlayer(true);
     }
 }

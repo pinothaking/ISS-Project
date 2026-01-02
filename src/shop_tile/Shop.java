@@ -1,8 +1,9 @@
 package shop_tile;
 import java.util.List;
+import Character.Player.Player;
 
 
-public class Shop {
+public class Shop{
 	public List<Item>items;
 	
 	public Shop(List<Item>items) {
@@ -13,14 +14,14 @@ public class Shop {
 		return items;
 	}
 	
-	public boolean purchase(Item item, Player player) {
+	public boolean purchase(Item item, shop_tile.Player player) {
 		if(!items.contains(item)){
 			return false;
 		}
-		if (player.getAura() < item.getPrice()) {
+		if (Player.getAura() < item.getPrice()) {
 			return false;
 		}
-		player.spendAuraPoints(item.getPrice());
+		player.spendAuraPoint(item.getPrice());
 		// qui se si deve mettere inventario
 		return true;
 	}

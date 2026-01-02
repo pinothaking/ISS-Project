@@ -1,5 +1,5 @@
 package stats_change;
 
-public interface Command {
+public interface command {
 	void execute(); //interfaccia 
 }
