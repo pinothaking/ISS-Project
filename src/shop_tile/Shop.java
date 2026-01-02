@@ -17,10 +17,10 @@ public class Shop {
 		if(!items.contains(item)){
 			return false;
 		}
-		if (player.getAuraPoint() < item.getPrice()) {
+		if (player.getAura() < item.getPrice()) {
 			return false;
 		}
-		player.spendAuraPoint(item.getPrice());
+		player.spendAuraPoints(item.getPrice());
 		// qui se si deve mettere inventario
 		return true;
 	}

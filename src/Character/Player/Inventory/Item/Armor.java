@@ -1,6 +1,6 @@
-package Character.Player.Item;
+package Character.Player.Inventory.Item;
 
-import Character.Player.Item.Enumeration.ItemRarity;
+import Character.Player.Inventory.Item.Enumeration.ItemRarity;
 
 public class Armor extends Item {
     private Integer HpBoost;

@@ -3,7 +3,6 @@ package Character.Player;
 import game_map_state.GameMapTile;
 
 public class Player {
-
     private int id;           // ID univoco
     private String name;
     private GameMapTile id_tile;
@@ -60,5 +59,17 @@ public class Player {
         this.id_tile.setPlayer(false);
         this.id_tile = newTile;
         this.id_tile.setPlayer(true);
+    }
+
+    public Player(){
+        this.aura = 0;
+    }
+
+    public void spendAuraPoint(int amount){
+        this.aura -= amount;
+    }
+
+        public void addAuraPoints(int amount) {
+        this.aura += amount;
     }
 }
