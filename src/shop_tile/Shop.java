@@ -21,7 +21,7 @@ public class Shop{
 		if (Player.getAura() < item.getPrice()) {
 			return false;
 		}
-		player.spendAuraPoint(item.getPrice());
+		Player.spendAuraPoint(item.getPrice());
 		// qui se si deve mettere inventario
 		return true;
 	}
