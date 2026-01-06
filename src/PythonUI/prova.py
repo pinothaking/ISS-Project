@@ -1,6 +1,7 @@
 import socket
 import pygame
 import math  # Serve per calcolare la distanza
+from enemy import Enemy
 from SpriteAnimation import SpriteAnimation
 from pawn import Pawn
 from dice import Dice_Move
@@ -63,7 +64,8 @@ dice_result_sent = False
 soul_animation = SpriteAnimation("img/WhiteFlame.png", 0, 20, 32, 32, scale=3, speed=50)
 aura = SpriteAnimation("img/AuraPoints-Sheet.png", 0, 120, 32, 32, scale=3, speed=50)
 
-
+#----Enemy-----–#
+current_enemy = None
 
 # ------------------ SOCKET ------------------
 SOCKET_PATH = "/tmp/game_socket"
@@ -217,10 +219,11 @@ while running:
         if event_type == "EVENT:ENEMY":
             print("Visualizza Nemico")
             label_event = myfont_big.render("COMBATTIMENTO!", 1, (255, 0, 0))
-            # Qui potresti bloccare il gioco finché l'utente non preme qualcosa
+            current_enemy = Enemy("Goblin Guerriero", 100, "img/KingMorlott.png", 250, 200, scale=(450, 450))
+            # Qui potresti bloccare il gioco finché l'utente non preme qualcosa<<
             # Per ora simuliamo che finisce subito:
             # In un gioco vero non manderesti MOVE_DONE subito qui, ma dopo il click
-            s.sendall(b"MOVE_DONE\n") 
+            # s.sendall(b"MOVE_DONE\n") 
             
         elif event_type == "EVENT:SHOP":
             print("Visualizza Shop")
@@ -257,6 +260,8 @@ while running:
     aura.draw(screen)
     pawn.draw(screen) 
     dice.draw(screen)
+    if current_enemy is not None:
+        current_enemy.draw(screen)
 
     if label: screen.blit(label, (0, 400))
     if label_start: screen.blit(label_start, (120, 360))
