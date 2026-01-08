@@ -58,3 +58,6 @@ class Dice_Move:
 
     def get_number(self):
         return self.result
+    def reset(self):
+        """Dimentica il numero uscito per il prossimo turno"""
+        self.result = None
