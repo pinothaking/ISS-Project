@@ -36,4 +36,24 @@ public class GameEngine {
         }
     }
 
+    public void moveBack(Player player, int steps, GameMap map){
+        List<GameMapTile> allTiles = new ArrayList<>();
+        for (Sectors s : map.getSectors()) {
+            allTiles.addAll(s.getTiles());
+        }
+
+        int currentIndex = allTiles.indexOf(player.getPosition());
+        int newIndex = currentIndex - steps;
+        if (newIndex <= 0){
+            newIndex = 0;
+        }
+        player.moveTo(allTiles.get(newIndex));
+        System.out.println(player.getName() + " si trova ora sulla tile " + player.getPosition().getId());
+        for (Sectors s : map.getSectors()) {
+            if (s.containsPlayer(player)) {
+                System.out.println("Player nel settore: " + s.getName());
+            }
+        }
+    }
+
 }

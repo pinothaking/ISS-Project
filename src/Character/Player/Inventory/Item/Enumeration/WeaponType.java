@@ -1,4 +1,4 @@
-/*package Character.Player.Item.Enumeration;
+package Character.Player.Inventory.Item.Enumeration;
 
 public enum WeaponType {
     BOW,
