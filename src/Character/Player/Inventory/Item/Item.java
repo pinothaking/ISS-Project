@@ -9,7 +9,6 @@ public class Item {
     private boolean isStackable;
     private final String fusionKey;
 
-<<<<<<< HEAD
     public Item (String name, ItemRarity rarity, Integer ObjectId, boolean isStackable, 
     String fusionKey) {
         this.name = name; /*univoco per fondere, ma così non si può modificare :/*/
@@ -37,12 +36,6 @@ public class Item {
 
     public String getFusionKey() {
     return fusionKey;
-=======
-    public Item(String name, ItemRarity rarity, Integer objectId) {
-        //TODO Auto-generated constructor stub
-    }
-
->>>>>>> 84b39e719abe94ec81e66f0bc62716c556ac13d1
 }
 
     public void onDuplicate() {}

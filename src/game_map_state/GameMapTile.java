@@ -33,6 +33,4 @@ public class GameMapTile {
     public Tile getTileBehavior() {
         return tileBehavior;
     }
-
-
 }

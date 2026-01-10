@@ -1,8 +1,6 @@
-package tests;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 
-import InputHandler;
 import stats_change.Command;
 
 public class InputHandlerTest {

@@ -15,7 +15,7 @@ public class Button {
 	 	}
  	}
  
- public void setCommand(Command command) {
+ public void setCommand() {
 	 this.command = command;
  }
 }

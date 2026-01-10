@@ -3,6 +3,7 @@ package Character.Player;
 import game_map_state.GameMapTile;
 
 public class Player {
+
     private int id;           // ID univoco
     private String name;
     private GameMapTile id_tile;
@@ -35,7 +36,7 @@ public class Player {
         return hp;
     }
 
-    public  int getAura() {
+    public int getAura() {
         return aura;
     }
 
@@ -53,14 +54,6 @@ public class Player {
 
     public void setSpirit(int spirit) {
         this.spirit = spirit;
-    }
-
-    public void spendAuraPoint(int amount){
-        this.aura -= amount;
-    }
-
-        public void addAuraPoints(int amount) {
-        this.aura += amount;
     }
 
     public void moveTo(GameMapTile newTile) {
