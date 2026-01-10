@@ -2,133 +2,138 @@ import java.io.*;
 import java.net.*;
 import java.nio.channels.*;
 import java.nio.file.*;
+import java.util.*;
+import java.lang.String;
 
+// Assicurati che questi package esistano nel tuo progetto
+import game_engine.GameEngine;
+import game_map_state.*;
+import battle_exploration_tiles.*;
+import Character.Player.*;
 
 public class UnixServer {
     public static void main(String[] args) throws Exception {
+        // Configurazione Socket
         Path socketPath = Path.of("/tmp/game_socket");
         Files.deleteIfExists(socketPath);
         UnixDomainSocketAddress address = UnixDomainSocketAddress.of(socketPath);
 
+        // Inizializzazione logica
+        MapFactory mapFactory = new MapFactory();
+        GameMap gameMap = null;
+        GameEngine engine = new GameEngine();
+        List<Player> players = new ArrayList<>();
+
         try (ServerSocketChannel server = ServerSocketChannel.open(StandardProtocolFamily.UNIX)) {
             server.bind(address);
-            System.out.println("Server (Java) avviato...");
+            System.out.println("Server (Java) avviato... In attesa di Python.");
 
             try (SocketChannel client = server.accept()) {
                 System.out.println("Python connesso.");
 
-                BufferedReader in = new BufferedReader(
-                        new InputStreamReader(Channels.newInputStream(client)));
-                PrintWriter out = new PrintWriter(
-                        Channels.newOutputStream(client), true);
+                BufferedReader in = new BufferedReader(new InputStreamReader(Channels.newInputStream(client)));
+                PrintWriter out = new PrintWriter(Channels.newOutputStream(client), true);
 
-                // Chiedi il numero di giocatori
+                // Step 1: Chiedo quanti giocatori
                 out.println("REQUEST_PLAYERS");
                 System.out.println("→ Inviato REQUEST_PLAYERS");
 
                 String line;
                 int numPlayers = 0;
-                int currentPlayer = 1;
-                boolean gameStarted = false;
+                int currentPlayerIndex = 0; // Indice della lista (0, 1, 2...)
 
                 while ((line = in.readLine()) != null) {
-                    System.out.println("Python ha risposto: " + line);
+                    // Debug leggero per vedere cosa arriva
+                    if (!line.equals("OK"))
+                        System.out.println("Python dice: " + line);
 
+                    // --- SETUP INIZIALE ---
                     if (line.startsWith("PLAYERS:")) {
                         numPlayers = Integer.parseInt(line.split(":")[1]);
                         System.out.println("Numero giocatori ricevuto: " + numPlayers);
 
-                        // Invia i comandi iniziali
-                        out.println("DRAW_BOARD");
-                        out.flush();  
-                        System.out.println("→ Inviato DRAW_BOARD");
+                        // Creazione Mappa
+                        gameMap = mapFactory.createMap();
+                        System.out.println("Mappa generata.");
 
-                        out.println("SET_PLAYERS:" + numPlayers);
-                        out.flush();  
-                        System.out.println("→ Inviato SET_PLAYERS:" + numPlayers);
+                        // Creazione Giocatori sulla casella iniziale (Settore 0, Tile 0)
+                        GameMapTile startTile = gameMap.getSectors().get(0).getTiles().get(0);
 
-                        out.println("SET_TURN:" + currentPlayer);
-                        out.flush();  
-                        System.out.println("→ Inviato SET_TURN:" + currentPlayer);
-
-                        out.println("WAIT_PLAYER");
-                        out.flush();  
-                        System.out.println("→ Inviato WAIT_PLAYER");
-
-                        gameStarted = true;
-
-                    } else if (line.equals("MOVE_DONE")) {
-                        // Il giocatore ha completato la mossa
-                        System.out.println("✓ Mossa completata dal giocatore " + currentPlayer);
-
-                        // Passa al prossimo giocatore
-                        currentPlayer++;
-                        if (currentPlayer > numPlayers) {
-                            currentPlayer = 1; // Ricomincia dal primo
+                        players.clear(); // Pulizia sicurezza
+                        for (int i = 0; i < numPlayers; i++) {
+                            // Nota: Passo 'i' come ID e 'startTile' come posizione
+                            Player p = new Player(i, "Player " + (i + 1), startTile, 100, 0, 0);
+                            p.moveTo(startTile);
+                            players.add(p);
                         }
+                        System.out.println("Creati " + numPlayers + " giocatori.");
 
-                        // Invia il nuovo turno
-                        System.out.println("→ Cambio turno, ora è il turno di: " + currentPlayer);
-                        out.println("SET_TURN:" + currentPlayer);
+                        // Invio configurazione alla UI
+                        out.println("DRAW_BOARD");
+                        out.println("SET_PLAYERS:" + numPlayers);
+
+                        // Dico che tocca al Player 1 (Indice 0 + 1)
+                        out.println("SET_TURN:" + (currentPlayerIndex + 1));
+                        out.println("WAIT_PLAYER"); // Sblocca i controlli UI
+
+                    }
+
+                    // --- GESTIONE DADO E MOVIMENTO ---
+                    else if (line.startsWith("DICE_RESULT")) { 
+                        int diceValue = Integer.parseInt(line.split(":")[1]);
+
+                        // 1. Identifico chi si sta muovendo
+                        Player currentPlayerObj = players.get(currentPlayerIndex);
+                        System.out.println(
+                                "Engine: Muovo " + currentPlayerObj.getName() + " di " + diceValue + " passi.");
+
+                        // 2. L'Engine calcola la nuova posizione logica
+                        engine.movePlayer(currentPlayerObj, diceValue, gameMap);
+
+                        // 3. Recupero il nuovo ID della casella
+                        GameMapTile newTile = currentPlayerObj.getPosition();
+                        int newPosId = newTile.getId();
+
+                        // 4. Dico a Python di spostare la pedina grafica
+                        out.println("MOVE_PAWN_TO:" + newPosId);
+
+                        // 5. Controllo EVENTI sulla casella
+                        Tile behavior = newTile.getTileBehavior();
+
+                        if (behavior instanceof EnemyTile) {
+                            System.out.println("Java: Evento NEMICO");
+                            out.println("EVENT:ENEMY");
+                        } //else if (behavior instanceof ShopTile) {
+                            //System.out.println("Java: Evento NEGOZIO");
+                           // out.println("EVENT:SHOP");
+                        else {
+                            System.out.println("Java: Casella vuota");
+                            out.println("EVENT:EMPTY"); // Corretto da EVENT: SHOP
+                        }
                         out.flush();
-                        out.println("THROWDICE");
+
+                    }
+
+                    // --- GESTIONE FINE TURNO ---
+                    else if (line.equals("MOVE_DONE")) {
+                        System.out.println("✓ Mossa finita per Player " + (currentPlayerIndex + 1));
+
+                        // 1. Calcolo il prossimo giocatore (Round Robin: 0->1->2->0...)
+                        currentPlayerIndex = (currentPlayerIndex + 1) % numPlayers;
+
+                        // 2. Comunico il cambio turno
+                        System.out.println("→ Ora tocca a Player: " + (currentPlayerIndex + 1));
+                        out.println("SET_TURN:" + (currentPlayerIndex + 1));
+
+                        // 3. Dico alla UI di aspettare l'input (SPAZIO)
+                        out.println("WAIT_PLAYER");
                         out.flush();
-                        out.println("WAIT_PLAYER"); 
-                        out.flush();
-                        System.out.println("→ Inviato WAIT_PLAYER per giocatore " + currentPlayer);
 
                     } else if (line.equals("OK")) {
-                        // Comando ricevuto ed eseguito (ACK)
+                        // Ack silenzioso
                     }
                 }
             }
         }
     }
 }
-/*
- * 
- * 
- * 
- * ##Spiegazione:
- * 
- * Il comando`WAIT_PLAYER`
- * viene inviato in**due momenti**:
- * 
- * 1.**All'inizio del gioco**-
- * dopo aver
- * impostato il
- * turno del
- * primo giocatore 2.**
- * Dopo ogni
- * cambio turno**-
- * quando un
- * giocatore completa
- * la sua
- * mossa e
- * passa al successivo
- * 
- * ##
- * Sequenza completa:```Java→Python:
- * REQUEST_PLAYERS Python→Java:PLAYERS:2 Java→Python:
- * DRAW_BOARD
- * Java→Python:SET_PLAYERS:2 Java→Python:SET_TURN:1←
- * È il
- * turno del giocatore 1 Java→Python:WAIT_PLAYER←
- * Aspetta che
- * faccia la mossa[Giocatore 1
- * preme SPAZIO]Python→Java:
- * MOVE_DONE Java→Python:SET_TURN:2←
- * Ora è
- * il turno
- * del giocatore 2 Java→Python:
- * MOVE_PIECE
- * Java→Python:WAIT_PLAYER←
- * Aspetta che
- * faccia la mossa[Giocatore 2
- * preme SPAZIO]Python→Java:
- * MOVE_DONE Java→Python:SET_TURN:1←
- * Torna al giocatore 1 Java→Python:
- * MOVE_PIECE
- * Java→Python:WAIT_PLAYER←
- * E così via
- */

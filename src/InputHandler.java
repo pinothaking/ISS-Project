@@ -1,18 +1,18 @@
 import java.util.HashMap;
 import java.util.Map;
 
-import stats_change.Command;
+import stats_change.command;
 
 public class InputHandler {
 
-    private Map<String, Command> CommandMap = new HashMap<>();
+    private Map<String, command> CommandMap = new HashMap<>();
 
-    public void bind(String key, Command command) {
+    public void bind(String key, command command) {
         CommandMap.put(key, command);
     }
 
     public void onKeyPressed(String key) {
-        Command command = CommandMap.get(key);
+        command command = CommandMap.get(key);
         if (command != null) {
             command.execute();
         }

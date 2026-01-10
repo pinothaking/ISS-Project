@@ -1,6 +1,6 @@
 package stats_change;
 
-public class ConcreteCommand implements Command{
+public class ConcreteCommand implements command{
 	// riceve l'oggetto Receiver che eseguirà le operazioni concrete
 	
 	
