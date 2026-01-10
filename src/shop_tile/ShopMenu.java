@@ -1,4 +1,5 @@
 package shop_tile;
+import Character.Player.Player;
 
 public class ShopMenu {
 	public Shop Shop;

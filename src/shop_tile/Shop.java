@@ -14,14 +14,14 @@ public class Shop{
 		return items;
 	}
 	
-	public boolean purchase(Item item, shop_tile.Player player) {
+	public boolean purchase(Item item, Player player) {
 		if(!items.contains(item)){
 			return false;
 		}
-		if (Player.getAura() < item.getPrice()) {
+		if (player.getAura() < item.getPrice()) {
 			return false;
 		}
-		Player.spendAuraPoint(item.getPrice());
+		player.spendAuraPoint(item.getPrice());
 		// qui se si deve mettere inventario
 		return true;
 	}
