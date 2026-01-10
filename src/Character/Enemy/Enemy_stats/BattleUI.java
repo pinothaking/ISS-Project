@@ -1,4 +1,5 @@
-package Enemy_stats;
+package Character.Enemy.Enemy_stats;
+
 import Character.Enemy.Enemy;
 public class BattleUI implements EnemyObserver {
 

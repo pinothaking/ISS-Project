@@ -22,7 +22,7 @@ public class Enemy {
     }
 
     // Observer methods
-    public void attach(EnemyObserver observer) {
+    public void attack(EnemyObserver observer) {
         observers.add(observer);
     }
 
