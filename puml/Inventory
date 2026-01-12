@@ -1,0 +1,72 @@
+@startuml Composite Pattern - Inventory
+
+' Component interface
+interface InventoryComponent {
+    + getFusionKey() : String
+    + getQuantity() : int
+}
+
+' Leaf - Item singolo
+abstract class Item <<Leaf>> {
+    - name : String
+    - fusionKey : String
+    + getFusionKey() : String
+    + isStackable() : boolean
+    + onDuplicate() : void
+    + getQuantity() : int
+}
+
+' Composite - Gruppo di item
+class InventoryEntry <<Composite>> {
+    - item : Item
+    - quantity : int
+    + InventoryEntry(item : Item)
+    + addOne() : void
+    + getItem() : Item
+    + getQuantity() : int
+    + getFusionKey() : String
+}
+
+' Container - Gestisce i componenti
+class Inventory <<Client>> {
+    - items : List<Item>
+    - entriesByKey : Map<String, InventoryEntry>
+    + addItem(item : Item) : void
+    + getItems() : List<Item>
+    + removeItem(fusionKey : String) : void
+    + getEntry(fusionKey : String) : InventoryEntry
+}
+
+' Relazioni
+InventoryComponent <|.. Item
+InventoryComponent <|.. InventoryEntry
+InventoryEntry o--> Item : contains
+Inventory o--> "*" InventoryEntry : manages
+Inventory o--> "*" Item : stores
+
+note right of InventoryComponent
+  Component: definisce l'interfaccia
+  comune per oggetti semplici
+  e composti
+end note
+
+note right of Item
+  Leaf: rappresenta
+  un singolo item
+  (oggetto foglia)
+end note
+
+note right of InventoryEntry
+  Composite: rappresenta
+  un gruppo di item identici
+  con quantità
+end note
+
+note bottom of Inventory
+  Client: gestisce la struttura
+  composita e permette di
+  trattare item singoli e gruppi
+  in modo uniforme
+end note
+
+@enduml

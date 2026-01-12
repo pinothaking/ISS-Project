@@ -3,7 +3,7 @@ package Character.Enemy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import Enemy_stats.EnemyObserver;
+import Character.Enemy.Enemy_stats.EnemyObserver;
 import Character.Player.Player;
 
 
@@ -22,7 +22,7 @@ public class Enemy {
     }
 
     // Observer methods
-    public void attack(EnemyObserver observer) {
+    public void attach(EnemyObserver observer) {
         observers.add(observer);
     }
 

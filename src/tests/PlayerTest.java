@@ -1,5 +1,6 @@
-import static org.junit.jupiter.api.Assertions.*;
+package tests;
 
+import static org.junit.jupiter.api.Assertions.*;
 import battle_exploration_tiles.GameContext;
 import battle_exploration_tiles.Tile;
 import game_map_state.GameMapTile;

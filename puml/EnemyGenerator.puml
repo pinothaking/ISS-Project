@@ -1,0 +1,61 @@
+@startuml Factory Method Pattern - EnemyGenerator
+
+' Product interface
+interface Tile {
+    + interact(context : GameContext) : void
+}
+
+' Concrete Product
+class EnemyTile <<Product>> {
+    - enemy : Enemy
+    + EnemyTile()
+    + EnemyTile(enemy : Enemy)
+    + setEnemy(enemy : Enemy) : void
+    + getEnemy() : Enemy
+    + interact(context : GameContext) : void
+}
+
+' Product
+class Enemy <<Product>> {
+    - hp : int
+    - attack : int
+    - defense : int
+    + Enemy(hp : int, attack : int, defense : int)
+}
+
+' Creator (Factory)
+class EnemyGenerator <<Factory>> {
+    - random : Random
+    + EnemyGenerator()
+    + EnemyGenerator(seed : long)
+    + generateEnemies(numTiles : int) : List<EnemyTile>
+    - createRandomEnemy() : Enemy
+}
+
+' Relazioni
+Tile <|.. EnemyTile
+EnemyTile o--> Enemy : contains
+EnemyGenerator ..> EnemyTile : creates
+EnemyGenerator ..> Enemy : creates
+
+note right of EnemyGenerator::createRandomEnemy
+  Factory Method che crea
+  nemici con statistiche casuali:
+  - HP: 10-20
+  - Attack: 2-6
+  - Defense: 1-3
+end note
+
+note left of EnemyGenerator::generateEnemies
+  Metodo che utilizza il Factory Method
+  per generare una lista di EnemyTile
+  (1 nemico ogni 3 tiles)
+end note
+
+note bottom of EnemyGenerator
+  Factory: nasconde la logica
+  di creazione dei prodotti
+  (Enemy e EnemyTile)
+end note
+
+@enduml

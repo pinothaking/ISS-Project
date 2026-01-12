@@ -1,8 +1,5 @@
 package Character.Player.Inventory;
-<<<<<<< HEAD
 
-=======
->>>>>>> 84b39e719abe94ec81e66f0bc62716c556ac13d1
 import java.util.*;
 
 import Character.Player.Inventory.Item.Item;
