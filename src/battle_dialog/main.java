@@ -1,6 +1,6 @@
 package battle_dialog;
 
-public class Main {
+public class main {
     public static void main(String[] args) {
         player player = new player();
 
