@@ -1,14 +1,20 @@
 package Character.Player;
 
+import Character.Player.Inventory.Inventory;
+import Character.Player.Inventory.OpenInventoryButton;
 import game_map_state.GameMapTile;
 
 public class Player {
-    private int id;           // ID univoco
+
+    private int id;
     private String name;
     private GameMapTile id_tile;
     private int hp;
     private int aura;
     private int spirit;
+
+    private Inventory inventory;
+    private Button eButton;
 
     public Player(int id, String name, GameMapTile id_tile, int hp, int aura, int spirit) {
         this.id = id;
@@ -17,55 +23,40 @@ public class Player {
         this.hp = hp;
         this.aura = aura;
         this.spirit = spirit;
+
+        this.inventory = new Inventory();
+
+        // Button “E” per aprire inventario
+        OpenInventoryButton openCommand = new OpenInventoryButton(this.inventory);
+        this.eButton = new Button(openCommand);
     }
 
-    public int getId() {
-        return id;
-    }
+    // --- Getters e Setters ---
+    public int getId() { return id; }
+    public String getName() { return name; }
+    public GameMapTile getPosition() { return id_tile; }
+    public int getHp() { return hp; }
+    public int getAura() { return aura; }
+    public int getSpirit() { return spirit; }
 
-    public String getName() {
-        return name;
-    }
+    public void setHp(int hp) { this.hp = hp; }
+    public void setAura(int aura) { this.aura = aura; }
+    public void setSpirit(int spirit) { this.spirit = spirit; }
+    public Inventory getInventory() { return inventory; }
 
-    public GameMapTile getPosition() {
-        return id_tile;
-    }
-
-    public int getHp() {
-        return hp;
-    }
-
-    public  int getAura() {
-        return aura;
-    }
-
-    public int getSpirit() {
-        return spirit;
-    }
-
-    public void setHp(int hp) {
-        this.hp = hp;
-    }
-
-    public void setAura(int aura) {
-        this.aura = aura;
-    }
-
-    public void setSpirit(int spirit) {
-        this.spirit = spirit;
-    }
-
-    public void spendAuraPoint(int amount){
-        this.aura -= amount;
-    }
-
-        public void addAuraPoints(int amount) {
-        this.aura += amount;
-    }
+    public void spendAuraPoint(int amount) { this.aura -= amount; }
+    public void addAuraPoints(int amount) { this.aura += amount; }
 
     public void moveTo(GameMapTile newTile) {
         this.id_tile.setPlayer(false);
         this.id_tile = newTile;
         this.id_tile.setPlayer(true);
+    }
+
+    // --- Metodo per premere il tasto “E” ---
+    public void pressE() {
+        if (eButton != null) {
+            eButton.onClick();
+        }
     }
 }

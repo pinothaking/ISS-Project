@@ -1,13 +1,21 @@
 package battle_exploration_tiles;
 
 import Character.Enemy.Enemy;
+import game_map_state.GameMapTile;
 
 public class EnemyTile implements Tile {
 
     private Enemy enemy;
-
+    private Realm realm;
+    private GameMapTile mapTile;
+    
     public EnemyTile() {
-        // di default il nemico è null
+        //di default il nemico è null
+    }
+
+    public EnemyTile(Realm realm, GameMapTile mapTile) {
+        this.realm = realm;
+        this.mapTile = mapTile;
     }
 
     public EnemyTile(Enemy enemy) {
@@ -21,6 +29,16 @@ public class EnemyTile implements Tile {
 
     public Enemy getEnemy() {
         return enemy;
+    }
+    public Realm setRealm() {
+        if (mapTile.getId() < 15 && mapTile.getId() >=0) {
+            return realm = Realm.INFERNO;
+        }else if (mapTile.getId() >=15 && mapTile.getId() <30) {
+            return realm = Realm.PURGATORIO;
+        }else if (mapTile.getId() >=30 && mapTile.getId() <=45) {
+            return realm = Realm.PARADISO;
+        }
+        return realm;
     }
 
     @Override
