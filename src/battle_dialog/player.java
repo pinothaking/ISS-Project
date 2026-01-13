@@ -1,6 +1,6 @@
 package battle_dialog;
 
-public class Player {
+public class player {
     private int auraPoints;
     private Tile currentTile;
 

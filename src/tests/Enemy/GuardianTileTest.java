@@ -1,4 +1,4 @@
-package battle_exploration_tiles;
+package tests.Enemy;
 import battle_exploration_tiles.*;
 import game_map_state.GameMapTile;
 import Character.Player.*;

@@ -1,4 +1,5 @@
-package battle_exploration_tiles;
+package tests;
+
 import stats_change.*;
 import Character.Enemy.Command;
 import Character.Player.Player;

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import battle_exploration_tiles.Realm;
 import Character.Enemy.Enemy_stats.EnemyObserver;
 import Character.Player.Player;
 
@@ -13,11 +14,11 @@ public class Enemy {
     private int hp;
     private int attack;
     private int defense;
-    private EnemyType type;
+    private Realm type;
 
     private List<EnemyObserver> observers = new ArrayList<>();
 
-    public Enemy(int hp, int attack, int defense, EnemyType type) {
+    public Enemy(int hp, int attack, int defense, Realm type) {
         this.hp = hp;
         this.attack = attack;
         this.defense = defense;
