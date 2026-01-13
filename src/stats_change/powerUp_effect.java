@@ -1,6 +1,6 @@
 package stats_change;
 
-public class powerUp_effect implements observer{
+public class PowerUp_effect implements Observer{
 	
 	@Override
 	public void update() {

@@ -1,8 +1,8 @@
 package battle_dialog;
 
-public class main {
+public class Main {
     public static void main(String[] args) {
-        player player = new player();
+        Player player = new Player();
 
         BattleState battleState = new BattleState(50, 100);
         BattleTile battleTile = new BattleTile(battleState);

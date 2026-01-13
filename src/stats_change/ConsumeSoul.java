@@ -10,19 +10,19 @@ import java.util.List;
 
 
 
-public class ConsumeSoul implements command {
-	List<observer> observer = new ArrayList<>();
+public class ConsumeSoul implements Command {
+	List<Observer> observer = new ArrayList<>();
 	private Receiver AuraPoint;
 	
-	public void attach(observer o) { // serve per aggiungere i valori/equip
+	public void attach(Observer o) { // serve per aggiungere i valori/equip
 		observer.add(o);
 	} 
-	public void detach(observer o) { // serve per togliere i valori al player/equip 
+	public void detach(Observer o) { // serve per togliere i valori al player/equip 
 		observer.remove(o);
 	}
 	
 	public void notifyObserver() { // per far sapere all'observer che i valori sono cambiati, 
-		for(observer o : observer) { //cosi da poterli aggiornare
+		for(Observer o : observer) { //cosi da poterli aggiornare
 			o.update();
 		}
 	}

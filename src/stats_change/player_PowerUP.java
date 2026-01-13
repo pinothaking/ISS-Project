@@ -1,10 +1,10 @@
 package stats_change;
 
-public class player_PowerUP implements observer {
+public class Player_PowerUP implements Observer {
 	
 	private ConcreteCommand consumeSoulConcreteCommand;
 	
-	public player_PowerUP(ConcreteCommand consumeSoulConcreteCommand) {
+	public Player_PowerUP(ConcreteCommand consumeSoulConcreteCommand) {
 		this.consumeSoulConcreteCommand = consumeSoulConcreteCommand;
 	}
 	

@@ -1,6 +1,6 @@
 package stats_change;
 
-public class FakeObserver implements observer{
+public class FakeObserver implements Observer{
 	public boolean update = false;
 	
 	@Override

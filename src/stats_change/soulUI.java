@@ -1,6 +1,6 @@
 package stats_change;
 
-public class soulUI implements observer{
+public class SoulUI implements Observer{
 	@Override
 	public void update() {
 		//aggiorna l'aura

@@ -22,7 +22,7 @@ class CommandTest {
     void testStealSoulCommand() {
         // Setup
         Player p = new Player(1111, "Hero", new GameMapTile(testTile, 0, false), 100, 10, 5);
-        command stealCmd = new ConsumeSoul();
+        Command stealCmd = new ConsumeSoul();
 
         // Esecuzione diretta del comando (senza bottone)
         stealCmd.execute();
@@ -35,7 +35,7 @@ class CommandTest {
     void testSaveSoulCommand() {
         Player p = new Player(1111, "Hero", new GameMapTile(testTile, 0, false), 100, 10, 5);
         Receiver r = new Receiver(p);
-        command saveCmd = new SaveSoulCommand(r, 10, 10);
+        Command saveCmd = new SaveSoulCommand(r, 10, 10);
 
         saveCmd.execute();
 

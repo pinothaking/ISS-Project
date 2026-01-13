@@ -1,6 +1,6 @@
 package stats_change;
 
-public class SaveSoulCommand implements command {
+public class SaveSoulCommand implements Command {
 
     private Receiver receiver;
     private int spiritGain;

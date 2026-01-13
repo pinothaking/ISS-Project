@@ -2,7 +2,7 @@ package tests;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-import stats_change.command;
+import stats_change.Command;
 
 public class InputHandlerTest {
 
@@ -17,7 +17,7 @@ public class InputHandlerTest {
         assertTrue(command.wasExecuted());
     }
 
-    static class TestCommand implements command {
+    static class TestCommand implements Command {
         private boolean executed = false;
 
         @Override
