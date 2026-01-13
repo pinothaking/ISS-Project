@@ -8,7 +8,7 @@ from dice import Dice_Move
 
 # ------------------ CONFIGURAZIONE MAPPA ------------------
 TILE_COORDINATES = {
-    0: (354, 729),  # START 
+    0: (354, 729),  # START
     1: (293, 727),  
     2: (236, 712),
     3: (171, 699),
@@ -38,6 +38,8 @@ myfont_small = pygame.font.SysFont("lucidasanstypewriter", 25)
 myfont_big = pygame.font.SysFont("lucidasanstypewriter", 45)
 title_font = pygame.font.SysFont("lucidasanstypewriter", 60, bold=True)
 combat_font = pygame.font.SysFont("lucidasanstypewriter", 70, bold=True)
+# Font leggermente più grande e bianco per il log
+log_font = pygame.font.SysFont("lucidasanstypewriter", 24, bold=True) 
 
 # ------------------ VARIABILI GLOBALI ------------------
 label = None
@@ -54,9 +56,9 @@ can_move = False
 
 # --- STATI BATTAGLIA ---
 in_battle = False 
-# Stati possibili: PLAYER_WAIT, PLAYER_ANIMATION, ENEMY_WAIT, ENEMY_ANIMATION, VICTORY_SELECTION
 battle_state = "PLAYER_WAIT" 
-battle_timer = 0             
+battle_timer = 0
+battle_log_text = "Inizia il combattimento!" 
 
 # Gestione Pedine e Posizioni
 pawns = []                 
@@ -74,9 +76,12 @@ dice_result_sent = False
 dice_enemy = Dice_Move("img/Dice-Sheet-Enemy.png", pos=(10, 550)) 
 
 # Animazioni Stats
-soul_animation = SpriteAnimation("img/WhiteFlame.png", 0, 0, 32, 32, scale=3, speed=40)
-aura = SpriteAnimation("img/AuraPoints-Sheet.png", 0, 0, 32, 32, scale=3, speed=40)
+soul_animation = SpriteAnimation("img/WhiteFlame.png", 0, 0, 32, 32, scale=3, speed=120)
+aura = SpriteAnimation("img/AuraPoints-Sheet.png", 0, 0, 32, 32, scale=3, speed=120)
 health = SpriteAnimation("img/HeartInfernothings.png", 0, 0 , 32, 32 , scale=3 , speed=0) 
+
+# Dialog Box (Assumiamo sia 620x760 full screen trasparente o un box in basso)
+dialogbox = SpriteAnimation("img/dialogbox.png", 0 ,0, 620, 760, scale=1, speed=0)
 
 # ------------------ SOCKET CONNECTION ------------------
 SOCKET_PATH = "/tmp/game_socket"
@@ -108,25 +113,21 @@ while running:
         # B) GIOCO & BATTAGLIA
         if event.type == pygame.KEYDOWN:
             
-            # --- MENU VITTORIA (NUOVO!) ---
-            # Se siamo nella schermata di scelta ricompensa
+            # --- MENU VITTORIA ---
             if in_battle and battle_state == "VICTORY_SELECTION":
                 current_pawn = pawns[current_player - 1]
                 
                 if event.key == pygame.K_1:
                     print("Hai scelto: RUBARE SOUL")
-                    current_pawn.soul += 1   # Aumenta Soul
-                    current_pawn.aura += 10  # Aumenta Aura
-                    
-                    # Chiudi Battaglia
+                    current_pawn.soul += 1   
+                    current_pawn.aura += 10  
                     current_enemy = None
                     in_battle = False 
                     label_event = None
                     s.sendall(b"MOVE_DONE\n")
                     
                 elif event.key == pygame.K_2:
-                    print("Hai scelto: RUBARE FORZA (Nessun effetto per ora)")
-                    # Chiudi Battaglia senza bonus
+                    print("Hai scelto: RUBARE FORZA")
                     current_enemy = None
                     in_battle = False 
                     label_event = None
@@ -134,10 +135,10 @@ while running:
 
             # --- COMBATTIMENTO: ATTACCO ---
             elif in_battle and battle_state == "PLAYER_WAIT" and event.key == pygame.K_SPACE:
-                print("⚔️ Attacco Player!")
                 dice.reset()     
                 dice.throw(2)    
                 battle_state = "PLAYER_ANIMATION"
+                battle_log_text = "Lanci il dado..." # LOG
 
             # --- MOVIMENTO MAPPA ---
             elif not in_battle and can_move and event.key == pygame.K_SPACE:
@@ -151,7 +152,6 @@ while running:
         # C) CHEAT VITTORIA RAPIDA
         if event.type == pygame.KEYDOWN and event.key == pygame.K_k:
             if in_battle and current_enemy is not None:
-                # Forza lo stato di vittoria
                 current_enemy.current_hp = 0
                 battle_state = "VICTORY_SELECTION" 
 
@@ -183,7 +183,6 @@ while running:
                 elif cmd.startswith("SET_PLAYERS:"):
                     num_players = int(cmd.split(":")[1])
                     player_selection_done = True 
-                    
                     pawns.clear()
                     player_logical_pos.clear()
                     start_x, start_y = TILE_COORDINATES.get(0, (0,0))
@@ -193,7 +192,6 @@ while running:
                         new_pawn.scale_image((40, 40)) 
                         pawns.append(new_pawn)
                         player_logical_pos[i+1] = 0 
-                    
                     print(f"Setup completato.")
 
                 elif cmd.startswith("SET_TURN:"):
@@ -202,10 +200,8 @@ while running:
                 elif cmd.startswith("MOVE_PAWN_TO:"):
                     target_id = int(cmd.split(":")[1])
                     current_logic_pos = player_logical_pos.get(current_player, 0)
-                    
                     start_range = current_logic_pos + 1
                     end_range = target_id + 1
-                    
                     if target_id < current_logic_pos:
                          start_range = target_id 
                          end_range = target_id + 1
@@ -213,7 +209,6 @@ while running:
                     for i in range(start_range, end_range):
                         if i in TILE_COORDINATES:
                             movement_queue.append(TILE_COORDINATES[i])
-                    
                     player_logical_pos[current_player] = target_id
                 
                 elif cmd.startswith("EVENT:"):
@@ -262,7 +257,6 @@ while running:
             pending_event = None 
             
             if event_type == "EVENT:ENEMY":
-                # Mostra scritta
                 combat_text = combat_font.render("COMBATTIMENTO!", True, (255, 0, 0))
                 text_rect = combat_text.get_rect(center=(WIDTH//2, HEIGHT//2))
                 s_surf = pygame.Surface((WIDTH, 200))  
@@ -276,6 +270,7 @@ while running:
                 # Inizializza Battaglia
                 in_battle = True
                 battle_state = "PLAYER_WAIT" 
+                battle_log_text = "Un nemico appare! Premi SPAZIO."
                 dice.reset()       
                 dice_enemy.reset()
                 
@@ -296,31 +291,34 @@ while running:
 
         # 1. Animazione Dado Giocatore finita?
         if battle_state == "PLAYER_ANIMATION" and dice.get_number() is not None:
-            damage = dice.get_number()
-            print(f"Colpo Player! Danno: {damage}")
+            raw_roll = dice.get_number()
+            damage = raw_roll * 10 
+            
+            battle_log_text = f"Hai fatto {raw_roll}! Infliggi {damage} danni."
+            
             current_enemy.take_damage(damage) 
             
-            # Controllo Vittoria
             if current_enemy.current_hp <= 0:
-                print("NEMICO SCONFITTO! Apro menu scelta...")
-                battle_state = "VICTORY_SELECTION" # <<< CAMBIO STATO
-                # NON MANDO ANCORA MOVE_DONE
+                battle_state = "VICTORY_SELECTION" 
             else:
                 battle_state = "ENEMY_WAIT"
                 battle_timer = pygame.time.get_ticks() 
 
         # 2. Attesa Nemico
         elif battle_state == "ENEMY_WAIT":
-            if pygame.time.get_ticks() - battle_timer > 1000: 
-                print("Nemico attacca!")
+            if pygame.time.get_ticks() - battle_timer > 1500: 
+                battle_log_text = "Il nemico si prepara ad attaccare..."
                 dice_enemy.reset()
                 dice_enemy.throw(2)
                 battle_state = "ENEMY_ANIMATION"
 
         # 3. Animazione Dado Nemico finita?
         elif battle_state == "ENEMY_ANIMATION" and dice_enemy.get_number() is not None:
-            damage = dice_enemy.get_number()
-            print(f"Colpo Nemico! Danno subito: {damage}")
+            raw_roll = dice_enemy.get_number()
+            damage = raw_roll * 10 
+            
+            battle_log_text = f"Nemico tira {raw_roll}. Subisci {damage} danni!"
+            
             current_pawn.hp -= damage 
             if current_pawn.hp < 0: current_pawn.hp = 0
 
@@ -328,7 +326,6 @@ while running:
             if current_pawn.hp <= 0:
                 print("SCONFITTA!")
                 current_pawn.hp = 100 
-                # Arretramento
                 current_pos_id = player_logical_pos.get(current_player, 0)
                 back_pos_id = max(0, current_pos_id - 3)
                 player_logical_pos[current_player] = back_pos_id
@@ -337,7 +334,6 @@ while running:
                     current_pawn.x = back_x
                     current_pawn.y = back_y
                 
-                # Chiude subito
                 in_battle = False
                 current_enemy = None
                 s.sendall(b"MOVE_DONE\n")
@@ -358,7 +354,7 @@ while running:
     if not player_selection_done:
         # MENU
         screen.fill((0, 0, 0)) 
-        title_text = title_font.render("THE THREE KINGDOMS", True, (255, 215, 0)) 
+        title_text = title_font.render("L' ASCESA", True, (255, 215, 0)) 
         title_rect = title_text.get_rect(center=(310, 200))
         screen.blit(title_text, title_rect)
         soul_animation.set_position(290, 300)
@@ -373,50 +369,40 @@ while running:
         # GIOCO
         if in_battle:
             
-            # --- MENU VITTORIA (SCHERMATA NERA) ---
             if battle_state == "VICTORY_SELECTION":
-                screen.fill((0, 0, 0)) # Sfondo nero totale
-                
-                # Titolo Vittoria
-                vic_text = combat_font.render("NEMICO SCONFITTO", True, (255, 215, 0)) # Oro
+                screen.fill((0, 0, 0)) 
+                vic_text = combat_font.render("NEMICO SCONFITTO", True, (255, 215, 0)) 
                 vic_rect = vic_text.get_rect(center=(WIDTH//2, 150))
                 screen.blit(vic_text, vic_rect)
-                
-                # Sottotitolo
                 sub_text = myfont.render("Scegli la tua ricompensa:", True, (255, 255, 255))
                 sub_rect = sub_text.get_rect(center=(WIDTH//2, 250))
                 screen.blit(sub_text, sub_rect)
-                
-                # Opzione 1
-                opt1 = myfont_big.render("[1] RUBA SOUL (+10 Aura)", True, (100, 255, 100))
+                opt1 = myfont_big.render("[1] LIBERA SOUL (+10 Aura)", True, (100, 255, 100))
                 screen.blit(opt1, (50, 400))
-                
-                # Opzione 2
-                opt2 = myfont_big.render("[2] RUBA FORZA", True, (255, 100, 100))
+                opt2 = myfont_big.render("[2] RUBA SOUL", True, (255, 100, 100))
                 screen.blit(opt2, (50, 500))
-                
-                # Mostra icone stats per riferimento
-                
             
-            # --- BATTAGLIA ATTIVA ---
             else:
                 if BattleMap: screen.blit(BattleMap, (0, 0))
                 else: screen.fill((50, 20, 20))
                 
                 if current_enemy: current_enemy.draw(screen)
+                
+                # --- DIALOG BOX e TESTO (Ordine Importante!) ---
+                # 1. Disegna il box immagine
+                dialogbox.draw(screen)
+                
+                # 2. Disegna il testo SOPRA il box (Colore BIANCO)
+                log_surf = log_font.render(battle_log_text, True, (255, 255, 255))
+                # Centro orizzontale, altezza 700 (basso)
+                log_rect = log_surf.get_rect(center=(WIDTH//2, 700)) 
+                screen.blit(log_surf, log_rect)
+                
                 dice.draw(screen)
                 dice_enemy.draw(screen)
                 
-                if battle_state == "PLAYER_WAIT":
-                     hint_battle = myfont.render("PREMI SPAZIO PER ATTACCARE", 1, (255, 255, 255))
-                     screen.blit(hint_battle, (100, 700))
-                elif battle_state == "ENEMY_WAIT" or battle_state == "ENEMY_ANIMATION":
-                     hint_battle = myfont.render("TURNO NEMICO...", 1, (255, 100, 100))
-                     screen.blit(hint_battle, (200, 700))
-                
-                # Disegna HUD anche in battaglia (tranne in vittoria)
+                # HUD Stats
                 current_pawn_obj = pawns[current_player - 1]
-                # (Codice HUD duplicato sotto per ordine)
                 soul_animation.set_position(10, 20)
                 soul_animation.draw(screen)
                 txt_soul = myfont_small.render(f"{current_pawn_obj.get_soul()}", True, (255, 255, 255))
