@@ -4,6 +4,7 @@ package battle_exploration_tiles;
 
 public class GameContext {
     private GameState currGameState; // salvo il contesto corrente 
+    private boolean inExploration = true;
 
     public GameContext(){
         currGameState = new ExplorationState(); // inizialmente è esplorazione
@@ -23,5 +24,9 @@ public class GameContext {
     // metodo per aggiornare lo stato di gioco corrente
     public void gameLoop(){
         currGameState.update();
+    }
+
+    public boolean isExploration(){
+        return this.inExploration;
     }
 }

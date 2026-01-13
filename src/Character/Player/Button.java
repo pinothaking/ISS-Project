@@ -19,5 +19,3 @@ public class Button {
 	 this.command = command;
  }
 }
-
-
