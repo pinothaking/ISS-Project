@@ -27,7 +27,7 @@ Segui questi passaggi la prima volta che scarichi il progetto.
 
 Apri il terminale nella cartella del progetto e crea un virtual environment:
 
-```bash
+
 # Crea l'ambiente virtuale chiamato 'myenv'
 python3 -m venv myenv
 
