@@ -14,7 +14,7 @@ public class Player {
     private int spirit;
 
     private Inventory inventory;
-    private Button eButton;
+    //private Button eButton;
 
     public Player(int id, String name, GameMapTile id_tile, int hp, int aura, int spirit) {
         this.id = id;
@@ -27,8 +27,8 @@ public class Player {
         this.inventory = new Inventory();
 
         // Button “E” per aprire inventario
-        OpenInventoryButton openCommand = new OpenInventoryButton(this.inventory);
-        this.eButton = new Button(openCommand);
+       // OpenInventoryButton openCommand = new OpenInventoryButton(this.inventory);
+        //this.eButton = new Button(openCommand);
     }
 
     // --- Getters e Setters ---
@@ -54,9 +54,5 @@ public class Player {
     }
 
     // --- Metodo per premere il tasto “E” ---
-    public void pressE() {
-        if (eButton != null) {
-            eButton.onClick();
-        }
-    }
+   
 }

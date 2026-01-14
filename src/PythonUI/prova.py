@@ -16,12 +16,21 @@ TILE_COORDINATES = {
     5: (238, 655),
     6: (289, 648),
     7: (343, 653),
-    8: (500, 450),
-    9: (450, 450),
-    10: (400, 450), 
-    11: (350, 450),
-    12: (300, 450),
-    # ... Aggiungi le altre coordinate ...
+    8: (357, 656),
+    9: (415, 651),
+    10: (451, 623),
+    11: (460, 599),
+    12: (433, 582),
+    13: (394, 581),
+    14: (342, 579),
+    15: (290, 577),
+    16: (250, 570),
+    17: (220, 549),
+    18: (233, 523),
+    19: (268, 517),
+    20: (318, 518),
+    21: (357, 520),
+    22: (403, 526),
 }
 
 # ------------------ INIT PYGAME ------------------
@@ -38,7 +47,6 @@ myfont_small = pygame.font.SysFont("lucidasanstypewriter", 25)
 myfont_big = pygame.font.SysFont("lucidasanstypewriter", 45)
 title_font = pygame.font.SysFont("lucidasanstypewriter", 60, bold=True)
 combat_font = pygame.font.SysFont("lucidasanstypewriter", 70, bold=True)
-# Font leggermente più grande e bianco per il log
 log_font = pygame.font.SysFont("lucidasanstypewriter", 24, bold=True) 
 
 # ------------------ VARIABILI GLOBALI ------------------
@@ -70,17 +78,14 @@ pending_event = None
 current_enemy = None       
 
 # ------------------ ASSETS & ANIMAZIONI ------------------
-# Dadi
 dice = Dice_Move("img/Dice-Sheet.png", pos=(10, 450)) 
 dice_result_sent = False
 dice_enemy = Dice_Move("img/Dice-Sheet-Enemy.png", pos=(10, 550)) 
 
-# Animazioni Stats
 soul_animation = SpriteAnimation("img/WhiteFlame.png", 0, 0, 32, 32, scale=3, speed=120)
 aura = SpriteAnimation("img/AuraPoints-Sheet.png", 0, 0, 32, 32, scale=3, speed=120)
 health = SpriteAnimation("img/HeartInfernothings.png", 0, 0 , 32, 32 , scale=3 , speed=0) 
 
-# Dialog Box (Assumiamo sia 620x760 full screen trasparente o un box in basso)
 dialogbox = SpriteAnimation("img/dialogbox.png", 0 ,0, 620, 760, scale=1, speed=0)
 
 # ------------------ SOCKET CONNECTION ------------------
@@ -118,7 +123,7 @@ while running:
                 current_pawn = pawns[current_player - 1]
                 
                 if event.key == pygame.K_1:
-                    print("Hai scelto: RUBARE SOUL")
+                    print("Hai scelto: LIBERA SOUL")
                     current_pawn.soul += 1   
                     current_pawn.aura += 10  
                     current_enemy = None
@@ -127,7 +132,7 @@ while running:
                     s.sendall(b"MOVE_DONE\n")
                     
                 elif event.key == pygame.K_2:
-                    print("Hai scelto: RUBARE FORZA")
+                    print("Hai scelto: RUBA SOUL")
                     current_enemy = None
                     in_battle = False 
                     label_event = None
@@ -138,7 +143,7 @@ while running:
                 dice.reset()     
                 dice.throw(2)    
                 battle_state = "PLAYER_ANIMATION"
-                battle_log_text = "Lanci il dado..." # LOG
+                battle_log_text = "Lanci il dado..." 
 
             # --- MOVIMENTO MAPPA ---
             elif not in_battle and can_move and event.key == pygame.K_SPACE:
@@ -149,7 +154,7 @@ while running:
                     dice_result_sent = False
                     label_event = None   
         
-        # C) CHEAT VITTORIA RAPIDA
+        # C) CHEAT VITTORIA RAPIDA (K)
         if event.type == pygame.KEYDOWN and event.key == pygame.K_k:
             if in_battle and current_enemy is not None:
                 current_enemy.current_hp = 0
@@ -251,11 +256,13 @@ while running:
                 next_x, next_y = movement_queue.pop(0) 
                 active_pawn.move_to(next_x, next_y)    
         
-        # --- GESTIONE EVENTI (Entrata in Battaglia) ---
+        # --- GESTIONE EVENTI (FINE MOVIMENTO) ---
         if pawns and pawns[current_player-1].is_arrived() and len(movement_queue) == 0 and pending_event is not None:
-            event_type = pending_event
-            pending_event = None 
             
+            event_type = pending_event
+            pending_event = None # Reset evento
+            
+            # --- EVENTI CLASSICI ---
             if event_type == "EVENT:ENEMY":
                 combat_text = combat_font.render("COMBATTIMENTO!", True, (255, 0, 0))
                 text_rect = combat_text.get_rect(center=(WIDTH//2, HEIGHT//2))
@@ -279,8 +286,15 @@ while running:
             elif event_type == "EVENT:SHOP":
                 label_event = myfont_big.render("NEGOZIO!", 1, (0, 255, 0))
                 s.sendall(b"MOVE_DONE\n")
+                
             elif event_type == "EVENT:EMPTY":
                 label_event = None
+                s.sendall(b"MOVE_DONE\n")
+            
+            # --- EVENTO SPECIALE: FINE ARRETRAMENTO ---
+            # Questo viene chiamato quando il giocatore ha finito di camminare all'indietro
+            elif event_type == "INTERNAL:RETREAT":
+                print("Arretramento completato. Passo il turno.")
                 s.sendall(b"MOVE_DONE\n")
 
     # =========================================================
@@ -322,21 +336,35 @@ while running:
             current_pawn.hp -= damage 
             if current_pawn.hp < 0: current_pawn.hp = 0
 
-            # Controllo Sconfitta
+            # --- SCONFITTA ---
             if current_pawn.hp <= 0:
-                print("SCONFITTA!")
+                print("SCONFITTA! Reset HP e Arretramento.")
                 current_pawn.hp = 100 
+                
+                # Calcolo posizione indietro
                 current_pos_id = player_logical_pos.get(current_player, 0)
                 back_pos_id = max(0, current_pos_id - 3)
-                player_logical_pos[current_player] = back_pos_id
-                if back_pos_id in TILE_COORDINATES:
-                    back_x, back_y = TILE_COORDINATES[back_pos_id]
-                    current_pawn.x = back_x
-                    current_pawn.y = back_y
                 
+                # Aggiornamento Logico
+                player_logical_pos[current_player] = back_pos_id
+                
+                # RIEMPI LA CODA DI MOVIMENTO INDIETRO
+                # Nota: range(start, end, -1) conta all'indietro
+                start_back = current_pos_id - 1
+                end_back = back_pos_id - 1 
+                
+                for i in range(start_back, end_back, -1):
+                    if i in TILE_COORDINATES:
+                        movement_queue.append(TILE_COORDINATES[i])
+                
+                # Chiudiamo la battaglia
                 in_battle = False
                 current_enemy = None
-                s.sendall(b"MOVE_DONE\n")
+                
+                # IMPORTANTE: NON inviare MOVE_DONE qui!
+                # Impostiamo un evento pendente che scatterà quando l'animazione indietro finisce.
+                pending_event = "INTERNAL:RETREAT"
+                
             else:
                 battle_state = "PLAYER_WAIT"
                 dice.reset() 
@@ -388,13 +416,8 @@ while running:
                 
                 if current_enemy: current_enemy.draw(screen)
                 
-                # --- DIALOG BOX e TESTO (Ordine Importante!) ---
-                # 1. Disegna il box immagine
                 dialogbox.draw(screen)
-                
-                # 2. Disegna il testo SOPRA il box (Colore BIANCO)
                 log_surf = log_font.render(battle_log_text, True, (255, 255, 255))
-                # Centro orizzontale, altezza 700 (basso)
                 log_rect = log_surf.get_rect(center=(WIDTH//2, 700)) 
                 screen.blit(log_surf, log_rect)
                 
