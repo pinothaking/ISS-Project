@@ -1,4 +1,4 @@
-package shop_tile;
+package tests;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
