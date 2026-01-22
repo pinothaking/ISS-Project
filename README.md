@@ -1,6 +1,6 @@
 # 🎲 L'Ascesa
 
-**The Three Kingdoms** è un gioco da tavolo digitale a turni sviluppato con un'architettura ibrida Client-Server.
+**L'ascesa** è un gioco da tavolo digitale a turni sviluppato con un'architettura ibrida Client-Server.
 
 Il progetto combina la robustezza di **Java** per la logica di gioco e la versatilità di **Python (Pygame)** per l'interfaccia grafica, comunicando in tempo reale tramite **Unix Domain Sockets**.
 
