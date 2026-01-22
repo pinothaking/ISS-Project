@@ -1,4 +1,4 @@
-# 🎲 The Three Kingdoms
+# 🎲 L'Ascesa
 
 **The Three Kingdoms** è un gioco da tavolo digitale a turni sviluppato con un'architettura ibrida Client-Server.
 
